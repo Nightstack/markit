@@ -9,7 +9,7 @@ A Rust-based command-line tool to save, view, and run command snippets (primaril
 **Goal:** Save and run named shell commands from a YAML file.
 
 ### Features:
-- `record <name>`: Start an interactive session to save a multi-line bash command.
+- `save <name>`: Start an interactive session to save a multi-line bash command.
 - `run <name>`: Execute the stored command.
 - `list`: Show a simple table of stored commands (name + description).
 - `show <name>`: Print the full saved command.
@@ -33,7 +33,7 @@ A Rust-based command-line tool to save, view, and run command snippets (primaril
 ### Features:
 - Support `executable: true/false` flag in YAML.
 - `copy <name>`: Copy snippet to clipboard (via `arboard` or `copypasta`).
-- `record <name> --type snippet`: Save a snippet that won't be executed.
+- `save <name> --type snippet`: Save a snippet that won't be executed.
 - `list-full`: Show all metadata and full content.
 
 ---
