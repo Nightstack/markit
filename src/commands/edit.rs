@@ -1,26 +1,32 @@
 use std::{env, io::Write, process::Command};
 
-use crate::{commands::helper::get_snippet, models::Snippet, storage};
+use crate::{
+    commands::helper::{get_snippet, redact_snippet},
+    models::{PartialSnippet, Snippet},
+    storage,
+};
 use tempfile::NamedTempFile;
 
 pub fn edit_command(name: String) -> () {
     let mut store = match storage::get_snippets() {
         Some(s) => s,
         None => {
-            println!("📭 No snippets to delete.");
+            println!("📭 No snippets to edit.");
             return;
         }
     };
 
-    let original = match get_snippet(name) {
+    let mut original = match get_snippet(name) {
         Some(s) => s,
         None => {
             return;
         }
     };
 
+    let editable = redact_snippet(&original);
+
     let mut tmpfile = NamedTempFile::new().expect("⛔ Could not create temp file");
-    let yaml = serde_yaml::to_string(&original).expect("⛔ Could not serialise snippet");
+    let yaml = serde_yaml::to_string(&editable).expect("⛔ Could not serialise snippet");
     tmpfile
         .write_all(yaml.as_bytes())
         .expect("⛔ Could not write to temp file");
@@ -36,7 +42,7 @@ pub fn edit_command(name: String) -> () {
         return;
     }
 
-    let edited: Snippet = match std::fs::read_to_string(tmpfile.path())
+    let edited: PartialSnippet = match std::fs::read_to_string(tmpfile.path())
         .ok()
         .and_then(|data| serde_yaml::from_str(&data).ok())
     {
@@ -60,11 +66,20 @@ pub fn edit_command(name: String) -> () {
     }
 
     store.snippets.retain(|s| s.name != original.name);
-    store.snippets.push(edited.clone());
+    apply_edits(&mut original, edited);
+    store.snippets.push(original.clone());
 
     if let Err(err) = storage::write_snippets(&store) {
         eprintln!("⛔ Failed to update snippet: {}", err);
     } else {
-        println!("✏️ Snippet '{}' updated.", edited.name);
+        println!("✏️ Snippet '{}' updated.", original.name);
     }
+}
+
+fn apply_edits(original: &mut Snippet, edited: PartialSnippet) {
+    original.name = edited.name;
+    original.description = edited.description;
+    original.content = edited.content;
+    original.executable = edited.executable;
+    original.updated_at = chrono::Utc::now();
 }

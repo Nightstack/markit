@@ -1,3 +1,5 @@
+use chrono::Utc;
+
 use crate::{models::Snippet, storage};
 use std::io::{self, BufRead, Write};
 
@@ -16,11 +18,14 @@ pub fn save_command(name: String) -> () {
     let description = read_description_input();
     let executable = read_executable_input();
     let content = read_content_input();
+    let now = Utc::now();
     let entry = Snippet {
         name,
         description,
         content,
         executable,
+        created_at: now,
+        updated_at: now,
     };
 
     storage::save_to_file(entry);

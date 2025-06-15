@@ -27,6 +27,8 @@ fn build_output_table(store: SnippetStore) -> Table {
         Cell::new("Name").fg(header_color),
         Cell::new("Description").fg(header_color),
         Cell::new("Executable").fg(header_color),
+        Cell::new("Created at").fg(header_color),
+        Cell::new("Updated at").fg(header_color),
     ]);
 
     for snippet in store.snippets {
@@ -34,6 +36,8 @@ fn build_output_table(store: SnippetStore) -> Table {
             Cell::new(snippet.name).fg(Color::White),
             Cell::new(snippet.description).fg(Color::White),
             Cell::new(if snippet.executable { "yes" } else { "no" }).fg(Color::White),
+            Cell::new(snippet.created_at).fg(Color::White),
+            Cell::new(snippet.updated_at).fg(Color::White),
         ]));
     }
 
