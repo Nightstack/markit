@@ -3,6 +3,10 @@ use dialoguer::{Select, theme::ColorfulTheme};
 use crate::models::Snippet;
 
 pub fn select_snippet(matches: Vec<Snippet>) -> Option<Snippet> {
+    if matches.len() == 1 {
+        return matches.get(0).cloned();
+    }
+
     let options: Vec<&str> = matches.iter().map(|s| s.name.as_str()).collect();
 
     let selection = Select::with_theme(&ColorfulTheme::default())
