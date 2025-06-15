@@ -166,6 +166,7 @@ dependencies = [
  "nucleo-matcher",
  "serde",
  "serde_yaml",
+ "tempfile",
 ]
 
 [[package]]
