@@ -63,6 +63,13 @@ pub fn get_snippets_by_name(query: &str) -> Option<Vec<Snippet>> {
         .collect()
 }
 
+pub fn write_snippets(store: &SnippetStore) -> Result<(), Box<dyn std::error::Error>> {
+    let path = get_storage_path();
+    let file = File::create(&path)?;
+    serde_yaml::to_writer(file, store)?;
+    Ok(())
+}
+
 fn get_storage_path() -> PathBuf {
     let dir = dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
