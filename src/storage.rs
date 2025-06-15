@@ -20,6 +20,23 @@ pub fn save_to_file(new_snippet: Snippet) -> () {
     println!("✅ Snippet saved.");
 }
 
+pub fn get_snippets() -> Option<SnippetStore> {
+    let path = get_storage_path();
+
+    if !path.exists() {
+        return None;
+    }
+
+    let file = File::open(&path).unwrap();
+    let store: SnippetStore = serde_yaml::from_reader(file).unwrap_or_default();
+
+    if store.snippets.is_empty() {
+        return None;
+    }
+
+    Some(store)
+}
+
 fn get_storage_path() -> PathBuf {
     let dir = dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
