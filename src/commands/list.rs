@@ -26,12 +26,14 @@ fn build_output_table(store: SnippetStore) -> Table {
     table.set_header(vec![
         Cell::new("Name").fg(header_color),
         Cell::new("Description").fg(header_color),
+        Cell::new("Executable").fg(header_color),
     ]);
 
     for snippet in store.snippets {
         table.add_row(Row::from(vec![
             Cell::new(snippet.name).fg(Color::White),
             Cell::new(snippet.description).fg(Color::White),
+            Cell::new(if snippet.executable { "yes" } else { "no" }).fg(Color::White),
         ]));
     }
 
