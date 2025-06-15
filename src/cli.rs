@@ -15,4 +15,5 @@ pub enum Commands {
     List,
     Show { name: String },
     Copy { name: String },
+    Delete { name: String },
 }
