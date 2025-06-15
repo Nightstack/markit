@@ -7,6 +7,8 @@ use clap::Parser;
 use cli::{Cli, Commands};
 use commands::save;
 
+use crate::commands::list;
+
 fn main() {
     let args = Cli::parse();
 
@@ -18,7 +20,7 @@ fn main() {
             println!("Would run command '{}'", name);
         }
         Commands::List => {
-            println!("Would list all bookmarks");
+            list::list_command();
         }
         Commands::Show { name } => {
             println!("Would show snippet '{}'", name);
