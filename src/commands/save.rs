@@ -2,6 +2,17 @@ use crate::{models::Snippet, storage};
 use std::io::{self, BufRead, Write};
 
 pub fn save_command(name: String) -> () {
+    if let Some(store) = storage::get_snippets() {
+        if store
+            .snippets
+            .iter()
+            .any(|s| s.name.eq_ignore_ascii_case(&name))
+        {
+            eprintln!("⛔ A snippet with the name '{}' already exists.", name);
+            return;
+        }
+    }
+
     let description = read_description_input();
     let executable = read_executable_input();
     let content = read_content_input();
