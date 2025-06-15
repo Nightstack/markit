@@ -37,6 +37,11 @@ pub fn get_snippets() -> Option<SnippetStore> {
     Some(store)
 }
 
+pub fn get_snippet_by_name(name: &str) -> Option<Snippet> {
+    let store = get_snippets()?;
+    store.snippets.into_iter().find(|s| s.name == name)
+}
+
 fn get_storage_path() -> PathBuf {
     let dir = dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
