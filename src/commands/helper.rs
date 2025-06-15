@@ -1,4 +1,7 @@
-use crate::{models::Snippet, storage, ui};
+use crate::{
+    models::{PartialSnippet, Snippet},
+    storage, ui,
+};
 
 pub fn get_snippet(name: String) -> Option<Snippet> {
     let snippets = match storage::get_snippets_by_name(&name) {
@@ -16,4 +19,13 @@ pub fn get_snippet(name: String) -> Option<Snippet> {
             return None;
         }
     };
+}
+
+pub fn redact_snippet(snippet: &Snippet) -> PartialSnippet {
+    PartialSnippet {
+        name: snippet.name.clone(),
+        description: snippet.description.clone(),
+        content: snippet.content.clone(),
+        executable: snippet.executable,
+    }
 }

@@ -5,6 +5,8 @@ pub fn show_command(name: String) {
 
     println!("🔎 Snippet: {}", snippet.name);
     println!("📄 Description: {}", snippet.description);
-    println!("📋 Content:\n{}", snippet.content);
     println!("🚀 Executable: {}", snippet.executable);
+    println!("🕒 Created at: {}", snippet.created_at);
+    println!("🕒 Updated at: {}", snippet.updated_at);
+    println!("📋 Content:\n{}", snippet.content);
 }
