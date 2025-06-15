@@ -25,17 +25,27 @@ fn read_description_input() -> String {
 }
 
 fn read_content_input() -> String {
-    println!("💡 type/paste your command below (end with 'EOF' on a new line):");
-    let stdin = io::stdin();
-    let mut content = String::new();
-    for line in stdin.lock().lines() {
-        let line = line.unwrap();
-        if line.trim() == "EOF" {
-            break;
-        }
+    println!("💡 Paste your command below.");
+    println!("👉 End with either:");
+    println!("   - Ctrl+D (Unix/macOS) or Ctrl+Z then Enter (Windows)");
+    println!("   - Or type 'EOF' or '---' on a new line to finish:");
 
-        content.push_str(&line);
-        content.push('\n');
+    let mut content = String::new();
+
+    let stdin = io::stdin();
+    for line in stdin.lock().lines() {
+        match line {
+            Ok(l) if l.trim() == "EOF" || l.trim() == "---" => break,
+            Ok(l) => {
+                content.push_str(&l);
+                content.push('\n');
+            }
+            Err(err) => {
+                eprintln!("⛔ Error reading input: {}", err);
+                break;
+            }
+        }
     }
+
     content
 }
