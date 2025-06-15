@@ -47,6 +47,18 @@ pub fn edit_command(name: String) -> () {
         }
     };
 
+    if store
+        .snippets
+        .iter()
+        .any(|s| s.name.eq_ignore_ascii_case(&edited.name) && s.name != original.name)
+    {
+        eprintln!(
+            "⛔ Another snippet with the name '{}' already exists.",
+            edited.name
+        );
+        return;
+    }
+
     store.snippets.retain(|s| s.name != original.name);
     store.snippets.push(edited.clone());
 
