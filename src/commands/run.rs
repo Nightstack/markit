@@ -18,6 +18,11 @@ pub fn run_command(name: String) -> () {
         }
     };
 
+    if !snippet.executable {
+        println!("⛔ Snippet '{}' not executable.", snippet.name);
+        return;
+    }
+
     println!("🚀 Running: {}", snippet.name);
     println!("📋 {}", snippet.content);
 

@@ -20,4 +20,5 @@ pub fn show_command(name: String) {
     println!("🔎 Snippet: {}", snippet.name);
     println!("📄 Description: {}", snippet.description);
     println!("📋 Content:\n{}", snippet.content);
+    println!("🚀 Executable: {}", snippet.executable);
 }
