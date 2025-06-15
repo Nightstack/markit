@@ -7,7 +7,7 @@ mod ui;
 use clap::Parser;
 use cli::{Cli, Commands};
 
-use crate::commands::{list, run, save, show};
+use crate::commands::{copy, list, run, save, show};
 
 fn main() {
     let args = Cli::parse();
@@ -24,6 +24,9 @@ fn main() {
         }
         Commands::Show { name } => {
             show::show_command(name);
+        }
+        Commands::Copy { name } => {
+            copy::copy_command(name);
         }
     }
 }
