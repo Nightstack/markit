@@ -41,7 +41,7 @@ pub fn get_snippets() -> Option<SnippetStore> {
     Some(store)
 }
 
-pub fn get_snippet_by_name(query: &str) -> Option<Snippet> {
+pub fn get_snippets_by_name(query: &str) -> Option<Vec<Snippet>> {
     let store = get_snippets()?;
 
     let names: Vec<&str> = store.snippets.iter().map(|s| s.name.as_str()).collect();
@@ -50,14 +50,17 @@ pub fn get_snippet_by_name(query: &str) -> Option<Snippet> {
     let matches = Pattern::parse(query, CaseMatching::Ignore, Normalization::Smart)
         .match_list(&names, &mut matcher);
 
-    matches.first().and_then(|(matched_name, _)| {
-        let matched_str = **matched_name;
-        store
-            .snippets
-            .iter()
-            .find(|s| s.name == matched_str)
-            .cloned()
-    })
+    matches
+        .into_iter()
+        .map(|(matched_name, _)| {
+            let matched_str = *matched_name;
+            store
+                .snippets
+                .iter()
+                .find(|s| s.name == matched_str)
+                .cloned()
+        })
+        .collect()
 }
 
 fn get_storage_path() -> PathBuf {
