@@ -1,3 +1,7 @@
+use nucleo_matcher::{
+    Config, Matcher,
+    pattern::{CaseMatching, Normalization, Pattern},
+};
 use std::{fs::File, path::PathBuf};
 
 use crate::models::{Snippet, SnippetStore};
@@ -37,9 +41,23 @@ pub fn get_snippets() -> Option<SnippetStore> {
     Some(store)
 }
 
-pub fn get_snippet_by_name(name: &str) -> Option<Snippet> {
+pub fn get_snippet_by_name(query: &str) -> Option<Snippet> {
     let store = get_snippets()?;
-    store.snippets.into_iter().find(|s| s.name == name)
+
+    let names: Vec<&str> = store.snippets.iter().map(|s| s.name.as_str()).collect();
+    let mut matcher = Matcher::new(Config::DEFAULT);
+
+    let matches = Pattern::parse(query, CaseMatching::Ignore, Normalization::Smart)
+        .match_list(&names, &mut matcher);
+
+    matches.first().and_then(|(matched_name, _)| {
+        let matched_str = **matched_name;
+        store
+            .snippets
+            .iter()
+            .find(|s| s.name == matched_str)
+            .cloned()
+    })
 }
 
 fn get_storage_path() -> PathBuf {
