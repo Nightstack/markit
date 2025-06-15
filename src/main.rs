@@ -1,13 +1,17 @@
 mod cli;
+mod commands;
+mod models;
+
 use clap::Parser;
 use cli::{Cli, Commands};
+use commands::save;
 
 fn main() {
     let args = Cli::parse();
 
     match args.command {
         Commands::Save { name } => {
-            println!("Would save command '{}'", name);
+            save::save_command(name);
         }
         Commands::Run { name } => {
             println!("Would run command '{}'", name);
