@@ -14,4 +14,5 @@ pub enum Commands {
     Run { name: String },
     List,
     Show { name: String },
+    Copy { name: String },
 }
