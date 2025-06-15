@@ -7,7 +7,7 @@ use clap::Parser;
 use cli::{Cli, Commands};
 use commands::save;
 
-use crate::commands::list;
+use crate::commands::{list, show};
 
 fn main() {
     let args = Cli::parse();
@@ -23,7 +23,7 @@ fn main() {
             list::list_command();
         }
         Commands::Show { name } => {
-            println!("Would show snippet '{}'", name);
+            show::show_command(name);
         }
     }
 }
