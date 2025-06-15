@@ -1,4 +1,4 @@
-use crate::models::Snippet;
+use crate::{models::Snippet, storage};
 use std::io::{self, BufRead, Write};
 
 pub fn save_command(name: String) -> () {
@@ -11,7 +11,7 @@ pub fn save_command(name: String) -> () {
         executable: true,
     };
 
-    println!("new entry added: {:?}", entry);
+    storage::save_to_file(entry);
 }
 
 fn read_description_input() -> String {

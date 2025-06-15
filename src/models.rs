@@ -7,3 +7,8 @@ pub struct Snippet {
     pub content: String,
     pub executable: bool,
 }
+
+#[derive(Serialize, Deserialize, Default)]
+pub struct SnippetStore {
+    pub snippets: Vec<Snippet>,
+}
