@@ -2,12 +2,12 @@ mod cli;
 mod commands;
 mod models;
 mod storage;
+mod ui;
 
 use clap::Parser;
 use cli::{Cli, Commands};
-use commands::save;
 
-use crate::commands::{list, show};
+use crate::commands::{list, run, save, show};
 
 fn main() {
     let args = Cli::parse();
@@ -17,7 +17,7 @@ fn main() {
             save::save_command(name);
         }
         Commands::Run { name } => {
-            println!("Would run command '{}'", name);
+            run::run_command(name);
         }
         Commands::List => {
             list::list_command();

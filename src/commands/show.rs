@@ -1,5 +1,4 @@
-use crate::{models::Snippet, storage};
-use dialoguer::{Select, theme::ColorfulTheme};
+use crate::{storage, ui};
 
 pub fn show_command(name: String) {
     let snippets = match storage::get_snippets_by_name(&name) {
@@ -10,7 +9,7 @@ pub fn show_command(name: String) {
         }
     };
 
-    let snippet = match select_snippet(snippets) {
+    let snippet = match ui::select_snippet(snippets) {
         Some(s) => s,
         None => {
             println!("⛔ Snippet '{}' not found.", name);
@@ -21,17 +20,4 @@ pub fn show_command(name: String) {
     println!("🔎 Snippet: {}", snippet.name);
     println!("📄 Description: {}", snippet.description);
     println!("📋 Content:\n{}", snippet.content);
-}
-
-fn select_snippet(matches: Vec<Snippet>) -> Option<Snippet> {
-    let options: Vec<&str> = matches.iter().map(|s| s.name.as_str()).collect();
-
-    let selection = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Multiple matches found. Select one:")
-        .items(&options)
-        .default(0)
-        .interact()
-        .ok()?;
-
-    matches.get(selection).cloned()
 }
