@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub fn get_snippet(name: String) -> Option<Snippet> {
-    let snippets = match storage::get_snippets_by_name(&name) {
+    let store = match storage::get_snippets_by_name(&name) {
         Some(s) => s,
         None => {
             println!("⛔ Snippet '{}' not found.", name);
@@ -12,7 +12,7 @@ pub fn get_snippet(name: String) -> Option<Snippet> {
         }
     };
 
-    return match ui::select_snippet(snippets) {
+    return match ui::select_snippet(store.snippets) {
         Some(s) => Some(s),
         None => {
             println!("⛔ Snippet '{}' not found.", name);
