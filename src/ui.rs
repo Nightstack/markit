@@ -18,3 +18,12 @@ pub fn select_snippet(matches: Vec<Snippet>) -> Option<Snippet> {
 
     matches.get(selection).cloned()
 }
+
+pub fn select_backup(backups: &[String]) -> Option<usize> {
+    Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("📦 Select a backup to restore:")
+        .items(backups)
+        .default(0)
+        .interact()
+        .ok()
+}

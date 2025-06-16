@@ -5,6 +5,7 @@ pub mod export;
 pub mod helper;
 pub mod import;
 pub mod list;
+pub mod restore;
 pub mod run;
 pub mod save;
 pub mod show;
