@@ -41,7 +41,7 @@ pub fn get_snippets() -> Option<SnippetStore> {
     Some(store)
 }
 
-pub fn get_snippets_by_name(query: &str) -> Option<Vec<Snippet>> {
+pub fn get_snippets_by_name(query: &str) -> Option<SnippetStore> {
     let store = get_snippets()?;
 
     let names: Vec<&str> = store.snippets.iter().map(|s| s.name.as_str()).collect();
@@ -50,9 +50,9 @@ pub fn get_snippets_by_name(query: &str) -> Option<Vec<Snippet>> {
     let matches = Pattern::parse(query, CaseMatching::Ignore, Normalization::Smart)
         .match_list(&names, &mut matcher);
 
-    matches
+    let matched_snippets: Vec<Snippet> = matches
         .into_iter()
-        .map(|(matched_name, _)| {
+        .filter_map(|(matched_name, _)| {
             let matched_str = *matched_name;
             store
                 .snippets
@@ -60,7 +60,15 @@ pub fn get_snippets_by_name(query: &str) -> Option<Vec<Snippet>> {
                 .find(|s| s.name == matched_str)
                 .cloned()
         })
-        .collect()
+        .collect();
+
+    if matched_snippets.is_empty() {
+        None
+    } else {
+        Some(SnippetStore {
+            snippets: matched_snippets,
+        })
+    }
 }
 
 pub fn get_snippets_by_tag(tag: &str) -> Option<SnippetStore> {
