@@ -82,4 +82,5 @@ fn apply_edits(original: &mut Snippet, edited: PartialSnippet) {
     original.content = edited.content;
     original.executable = edited.executable;
     original.updated_at = chrono::Utc::now();
+    original.tags = edited.tags;
 }

@@ -27,5 +27,6 @@ pub fn redact_snippet(snippet: &Snippet) -> PartialSnippet {
         description: snippet.description.clone(),
         content: snippet.content.clone(),
         executable: snippet.executable,
+        tags: snippet.tags.clone(),
     }
 }

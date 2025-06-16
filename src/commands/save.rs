@@ -18,12 +18,14 @@ pub fn save_command(name: String) -> () {
     let description = read_description_input();
     let executable = read_executable_input();
     let content = read_content_input();
+    let tags = read_tag_input();
     let now = Utc::now();
     let entry = Snippet {
         name,
         description,
         content,
         executable,
+        tags,
         created_at: now,
         updated_at: now,
     };
@@ -76,4 +78,18 @@ fn read_content_input() -> String {
     }
 
     content
+}
+
+fn read_tag_input() -> Vec<String> {
+    print!("🏷️  Enter tags (comma-separated, optional): ");
+    io::stdout().flush().unwrap();
+
+    let mut tags_input = String::new();
+    io::stdin().read_line(&mut tags_input).unwrap();
+
+    tags_input
+        .split(',')
+        .map(|t| t.trim().to_string())
+        .filter(|t| !t.is_empty())
+        .collect()
 }

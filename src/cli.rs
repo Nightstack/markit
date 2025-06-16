@@ -16,7 +16,10 @@ pub enum Commands {
     Run {
         name: String,
     },
-    List,
+    List {
+        #[arg(long)]
+        tag: Option<String>,
+    },
     Show {
         name: String,
     },

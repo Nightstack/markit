@@ -9,4 +9,5 @@ pub fn show_command(name: String) {
     println!("🕒 Created at: {}", snippet.created_at);
     println!("🕒 Updated at: {}", snippet.updated_at);
     println!("📋 Content:\n{}", snippet.content);
+    println!("🏷️ Tags: {}", snippet.tags.join(", "));
 }

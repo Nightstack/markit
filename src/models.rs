@@ -7,6 +7,7 @@ pub struct Snippet {
     pub description: String,
     pub content: String,
     pub executable: bool,
+    pub tags: Vec<String>,
     #[serde(default = "default_now")]
     pub created_at: DateTime<Utc>,
     #[serde(default = "default_now")]
@@ -17,7 +18,7 @@ fn default_now() -> DateTime<Utc> {
     Utc::now()
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct SnippetStore {
     pub snippets: Vec<Snippet>,
 }
@@ -28,4 +29,5 @@ pub struct PartialSnippet {
     pub description: String,
     pub content: String,
     pub executable: bool,
+    pub tags: Vec<String>,
 }

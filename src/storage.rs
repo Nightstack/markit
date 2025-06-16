@@ -63,6 +63,23 @@ pub fn get_snippets_by_name(query: &str) -> Option<Vec<Snippet>> {
         .collect()
 }
 
+pub fn get_snippets_by_tag(tag: &str) -> Option<SnippetStore> {
+    let store = get_snippets()?;
+
+    let matching: Vec<Snippet> = store
+        .snippets
+        .iter()
+        .filter(|s| s.tags.iter().any(|t| t.eq_ignore_ascii_case(tag)))
+        .cloned()
+        .collect();
+
+    if matching.is_empty() {
+        None
+    } else {
+        Some(SnippetStore { snippets: matching })
+    }
+}
+
 pub fn write_snippets(store: &SnippetStore) -> Result<(), Box<dyn std::error::Error>> {
     let path = get_storage_path();
     let file = File::create(&path)?;
