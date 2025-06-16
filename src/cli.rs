@@ -40,4 +40,5 @@ pub enum Commands {
     Import {
         path: String,
     },
+    Restore,
 }

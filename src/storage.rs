@@ -100,6 +100,38 @@ pub fn write_snippets(store: &SnippetStore) -> Result<(), Box<dyn std::error::Er
     Ok(())
 }
 
+pub fn get_backup_files() -> Vec<PathBuf> {
+    let backup_dir = get_storage_path().parent().unwrap().join("backups");
+
+    if !backup_dir.exists() {
+        return Vec::new();
+    }
+
+    let mut backups: Vec<PathBuf> = fs::read_dir(&backup_dir)
+        .unwrap()
+        .filter_map(|entry| {
+            let path = entry.ok()?.path();
+            if path.extension()?.to_str()? == "yml" {
+                Some(path)
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    backups.sort_by(|a, b| b.file_name().cmp(&a.file_name()));
+    backups
+}
+
+pub fn restore_backup(file_path: PathBuf) -> () {
+    let storage_path = get_storage_path();
+
+    match fs::copy(&file_path, &storage_path) {
+        Ok(_) => println!("✅ Backup restored from '{}'", file_path.display()),
+        Err(e) => eprintln!("⛔ Failed to restore backup: {}", e),
+    }
+}
+
 fn get_storage_path() -> PathBuf {
     let dir = dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
