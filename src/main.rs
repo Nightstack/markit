@@ -7,7 +7,7 @@ mod ui;
 use clap::Parser;
 use cli::{Cli, Commands};
 
-use crate::commands::{copy, delete, edit, export, list, run, save, show};
+use crate::commands::{copy, delete, edit, export, import, list, run, save, show};
 
 fn main() {
     let args = Cli::parse();
@@ -36,6 +36,9 @@ fn main() {
         }
         Commands::Export { path } => {
             export::export_command(&path);
+        }
+        Commands::Import { path } => {
+            import::import_command(&path);
         }
     }
 }

@@ -37,4 +37,7 @@ pub enum Commands {
     Export {
         path: String,
     },
+    Import {
+        path: String,
+    },
 }
