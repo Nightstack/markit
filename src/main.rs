@@ -19,8 +19,8 @@ fn main() {
         Commands::Run { name } => {
             run::run_command(name);
         }
-        Commands::List => {
-            list::list_command();
+        Commands::List { tag } => {
+            list::list_command(tag);
         }
         Commands::Show { name } => {
             show::show_command(name);
