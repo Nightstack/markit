@@ -1,12 +1,15 @@
+use chrono::Utc;
 use nucleo_matcher::{
     Config, Matcher,
     pattern::{CaseMatching, Normalization, Pattern},
 };
-use std::{fs::File, path::PathBuf};
+use std::{fs, fs::File, io::Write, path::PathBuf};
 
 use crate::models::{Snippet, SnippetStore};
 
 pub fn save_to_file(new_snippet: Snippet) -> () {
+    backup_current_store().unwrap();
+
     let path = get_storage_path();
 
     let mut store = if path.exists() {
@@ -89,6 +92,8 @@ pub fn get_snippets_by_tag(tag: &str) -> Option<SnippetStore> {
 }
 
 pub fn write_snippets(store: &SnippetStore) -> Result<(), Box<dyn std::error::Error>> {
+    backup_current_store()?;
+
     let path = get_storage_path();
     let file = File::create(&path)?;
     serde_yaml::to_writer(file, store)?;
@@ -101,4 +106,18 @@ fn get_storage_path() -> PathBuf {
         .join(".markit");
     std::fs::create_dir_all(&dir).unwrap();
     dir.join("bookmarks.yml")
+}
+
+fn backup_current_store() -> Result<(), Box<dyn std::error::Error>> {
+    let store = get_snippets().ok_or("No data to back up")?;
+    let backup_dir = get_storage_path().parent().unwrap().join("backups");
+    fs::create_dir_all(&backup_dir)?;
+
+    let timestamp = Utc::now().format("%Y-%m-%dT%H-%M-%SZ").to_string();
+    let backup_file = backup_dir.join(format!("{}.yml", timestamp));
+    let mut file = fs::File::create(backup_file)?;
+    let yaml = serde_yaml::to_string(&store)?;
+    file.write_all(yaml.as_bytes())?;
+
+    Ok(())
 }
