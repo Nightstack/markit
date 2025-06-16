@@ -34,4 +34,7 @@ pub enum Commands {
     Edit {
         name: String,
     },
+    Export {
+        path: String,
+    },
 }
