@@ -28,8 +28,8 @@ fn main() {
         Commands::Copy { name } => {
             copy::copy_command(name);
         }
-        Commands::Delete { name } => {
-            delete::delete_command(name);
+        Commands::Delete { name, force } => {
+            delete::delete_command(name, force);
         }
         Commands::Edit { name } => {
             edit::edit_command(name);

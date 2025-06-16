@@ -10,11 +10,25 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    Save { name: String },
-    Run { name: String },
+    Save {
+        name: String,
+    },
+    Run {
+        name: String,
+    },
     List,
-    Show { name: String },
-    Copy { name: String },
-    Delete { name: String },
-    Edit { name: String },
+    Show {
+        name: String,
+    },
+    Copy {
+        name: String,
+    },
+    Delete {
+        name: String,
+        #[arg(short, long)]
+        force: bool,
+    },
+    Edit {
+        name: String,
+    },
 }
