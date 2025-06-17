@@ -1,7 +1,7 @@
-use crate::{commands::helper::get_snippet, storage::Storage};
+use crate::{commands::helper::get_snippet, storage::Storage, ui::SelectionUI};
 use std::process::Command;
 
-pub fn run_command(storage: &dyn Storage, name: String) -> () {
+pub fn run_command(storage: &dyn Storage, selection_ui: &dyn SelectionUI, name: String) -> () {
     let store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -10,7 +10,7 @@ pub fn run_command(storage: &dyn Storage, name: String) -> () {
         }
     };
 
-    let snippet = get_snippet(&store, name).unwrap();
+    let snippet = get_snippet(&store, selection_ui, name).unwrap();
 
     if !snippet.executable {
         println!("⛔ Snippet '{}' not executable.", snippet.name);
