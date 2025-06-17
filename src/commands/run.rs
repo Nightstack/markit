@@ -1,8 +1,16 @@
-use crate::commands::helper::get_snippet;
+use crate::{commands::helper::get_snippet, storage::Storage};
 use std::process::Command;
 
-pub fn run_command(name: String) -> () {
-    let snippet = get_snippet(name).unwrap();
+pub fn run_command(storage: &dyn Storage, name: String) -> () {
+    let store = match storage.load() {
+        Ok(s) => s,
+        Err(_) => {
+            println!("📭 No snippets saved yet.");
+            return;
+        }
+    };
+
+    let snippet = get_snippet(&store, name).unwrap();
 
     if !snippet.executable {
         println!("⛔ Snippet '{}' not executable.", snippet.name);

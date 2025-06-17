@@ -1,7 +1,7 @@
-use crate::{models::SnippetStore, storage};
+use crate::{models::SnippetStore, storage::Storage};
 use std::{fs::File, path::Path};
 
-pub fn import_command(file_path: &str) {
+pub fn import_command(storage: &dyn Storage, file_path: &str) {
     let file = match File::open(Path::new(file_path)) {
         Ok(f) => f,
         Err(err) => {
@@ -18,7 +18,13 @@ pub fn import_command(file_path: &str) {
         }
     };
 
-    let mut store = storage::get_snippets().unwrap_or_default();
+    let mut store = match storage.load() {
+        Ok(s) => s,
+        Err(_) => {
+            println!("📭 No snippets saved yet.");
+            return;
+        }
+    };
 
     let mut added = 0;
     for snippet in imported.snippets {
@@ -28,8 +34,8 @@ pub fn import_command(file_path: &str) {
         }
     }
 
-    if let Err(err) = storage::write_snippets(&store) {
-        eprintln!("⛔ Failed to update storage: {err}");
+    if let Err(err) = storage.save_all(&store) {
+        eprintln!("⛔ Failed to update storage: {:?}", err);
     } else {
         println!("📥 Imported {added} new snippet(s) from {file_path}");
     }

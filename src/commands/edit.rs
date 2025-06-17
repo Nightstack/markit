@@ -3,20 +3,20 @@ use std::{env, io::Write, process::Command};
 use crate::{
     commands::helper::{get_snippet, redact_snippet},
     models::{PartialSnippet, Snippet},
-    storage,
+    storage::Storage,
 };
 use tempfile::NamedTempFile;
 
-pub fn edit_command(name: String) -> () {
-    let mut store = match storage::get_snippets() {
-        Some(s) => s,
-        None => {
-            println!("📭 No snippets to edit.");
+pub fn edit_command(storage: &dyn Storage, name: String) -> () {
+    let mut store = match storage.load() {
+        Ok(s) => s,
+        Err(_) => {
+            println!("📭 No snippets saved yet.");
             return;
         }
     };
 
-    let mut original = match get_snippet(name) {
+    let mut original = match get_snippet(&store, name) {
         Some(s) => s,
         None => {
             return;
@@ -69,8 +69,8 @@ pub fn edit_command(name: String) -> () {
     apply_edits(&mut original, edited);
     store.snippets.push(original.clone());
 
-    if let Err(err) = storage::write_snippets(&store) {
-        eprintln!("⛔ Failed to update snippet: {}", err);
+    if let Err(err) = storage.save_all(&store) {
+        eprintln!("⛔ Failed to update snippet: {:?}", err);
     } else {
         println!("✏️ Snippet '{}' updated.", original.name);
     }

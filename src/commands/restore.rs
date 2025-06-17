@@ -1,8 +1,15 @@
-use crate::storage::{get_backup_files, restore_backup};
+use crate::storage::Storage;
 use crate::ui::select_backup;
 
-pub fn restore_command() {
-    let backups = get_backup_files();
+pub fn restore_command(storage: &dyn Storage) {
+    let backups = match storage.get_backups() {
+        Ok(s) => s,
+        Err(_) => {
+            println!("📭 No backups created yet.");
+            return;
+        }
+    };
+
     if backups.is_empty() {
         println!("📭 No backups found.");
         return;
@@ -19,5 +26,9 @@ pub fn restore_command() {
     };
 
     let full_path = backups.get(selected_index).unwrap().clone();
-    restore_backup(full_path);
+
+    match storage.restore_backup(&full_path) {
+        Ok(_) => println!("✅ Backup restored successfully."),
+        Err(e) => eprintln!("⛔ Failed to restore backup: {}", e),
+    };
 }

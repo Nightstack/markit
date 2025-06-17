@@ -1,38 +1,39 @@
-use crate::{models::SnippetStore, storage};
+use crate::{
+    models::Snippet,
+    storage::{
+        Storage,
+        filter::{Filter, apply_filter},
+    },
+};
 use comfy_table::{Cell, Color, Row, Table, presets::UTF8_FULL};
 
-pub fn list_command(tag: Option<String>) -> () {
-    match tag {
-        Some(t) => output_tagged_snippets(&t),
-        None => output_all_snippets(),
-    }
-}
-
-fn output_all_snippets() -> () {
-    match storage::get_snippets() {
-        Some(store) => {
-            let table = build_output_table(store);
-            println!("{table}");
+pub fn list_command(storage: &dyn Storage, tag: Option<String>) -> () {
+    let store = match storage.load() {
+        Ok(s) => s,
+        Err(_) => {
+            println!("📭 No snippets saved yet.");
+            return;
         }
-        None => {
+    };
+
+    let snippets: Vec<Snippet> = match tag.as_deref() {
+        Some(tag) => apply_filter(&store, Filter::Tag(tag.to_string())),
+        None => apply_filter(&store, Filter::All),
+    };
+
+    if snippets.is_empty() {
+        if let Some(tag) = tag {
+            println!("📭 No snippets found for tag: {}.", tag);
+        } else {
             println!("📭 No snippets saved yet.");
         }
+    } else {
+        let table = build_output_table(snippets);
+        println!("{table}");
     }
 }
 
-fn output_tagged_snippets(tag: &str) -> () {
-    match storage::get_snippets_by_tag(tag) {
-        Some(store) => {
-            let table = build_output_table(store);
-            println!("{table}");
-        }
-        None => {
-            println!("📭 No snippets found for tag: {}.", tag);
-        }
-    }
-}
-
-fn build_output_table(store: SnippetStore) -> Table {
+fn build_output_table(snippets: Vec<Snippet>) -> Table {
     let mut table = Table::new();
     table.load_preset(UTF8_FULL);
     let header_color = Color::Rgb {
@@ -51,7 +52,7 @@ fn build_output_table(store: SnippetStore) -> Table {
         Cell::new("Tags").fg(header_color),
     ]);
 
-    for snippet in store.snippets {
+    for snippet in snippets {
         table.add_row(Row::from(vec![
             Cell::new(snippet.name).fg(Color::White),
             Cell::new(snippet.description).fg(Color::White),
