@@ -167,6 +167,12 @@ Built for people who Google the same commands 20 times a week. Now you don’t h
 
 ---
 
+## ☕ Support
+
+If markit saves you time, consider [buying me a coffee](https://ko-fi.com/arpydev) — it helps keep the project going!
+
+---
+
 ## 📄 License
 
 MIT
