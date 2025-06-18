@@ -34,16 +34,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Rust
-        uses: actions/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
+      - name: Install Rust (manual)
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          rustup show
 
       - name: Install Cross (Linux only)
         if: matrix.use_cross == true
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Build (Cross for Linux)
         if: matrix.use_cross == true
@@ -71,10 +70,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Rust
-        uses: actions/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
+      - name: Install Rust (manual)
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          rustup show
 
       - name: Publish to crates.io
         run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
