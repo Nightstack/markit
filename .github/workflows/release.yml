@@ -40,6 +40,11 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           rustup show
 
+      - name: Install target (macOS only)
+        if: matrix.target == 'x86_64-apple-darwin'
+        run: |
+          rustup target add x86_64-apple-darwin
+
       - name: Install Cross (Linux only)
         if: matrix.use_cross == true
         run: cargo install cross --git https://github.com/cross-rs/cross
@@ -82,7 +87,7 @@ jobs:
       - name: Dispatch Homebrew bump
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.HOMEBREW_GITHUB_TOKEN }}
           repository: Nightstack/homebrew-markit
           event-type: bump-homebrew
           client-payload: '{"tag": "v${{ github.ref_name }}"}'
