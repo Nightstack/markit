@@ -1,16 +1,24 @@
 mod cli;
+mod clipboard_provider;
+mod command_runner;
 mod commands;
+mod file;
+mod input;
 mod models;
 mod storage;
 mod ui;
 
+use arboard::Clipboard;
 use clap::Parser;
 use cli::{Cli, Commands};
 
 use crate::{
+    command_runner::ShellCommandRunner,
     commands::{copy, delete, edit, export, import, list, restore, run, save, show},
+    file::{editor::Editor, reader::Reader, writer::Writer},
+    input::cli_save::CliSaveInput,
     storage::file_storage::FileStorage,
-    ui::{cli_selection::CliSelection, cli_table::CliTable},
+    ui::{cli_confirm::DialoguerConfirm, cli_selection::CliSelection, cli_table::CliTable},
 };
 
 fn main() {
@@ -19,11 +27,13 @@ fn main() {
 
     match args.command {
         Commands::Save { name } => {
-            save::save_command(&storage, name);
+            let input = CliSaveInput;
+            save::save_command(&storage, &input, name);
         }
         Commands::Run { name } => {
             let selection_ui = CliSelection::new();
-            run::run_command(&storage, &selection_ui, name);
+            let runner = ShellCommandRunner;
+            run::run_command(&storage, &selection_ui, &runner, name);
         }
         Commands::List { tag } => {
             let mut cli_table = CliTable::new();
@@ -35,21 +45,26 @@ fn main() {
         }
         Commands::Copy { name } => {
             let selection_ui = CliSelection::new();
-            copy::copy_command(&storage, &selection_ui, name);
+            let mut clipboard = Clipboard::new().expect("Failed to access clipboard");
+            copy::copy_command(&storage, &selection_ui, &mut clipboard, name);
         }
         Commands::Delete { name, force } => {
             let selection_ui = CliSelection::new();
-            delete::delete_command(&storage, &selection_ui, name, force);
+            let confirm_prompt = DialoguerConfirm;
+            delete::delete_command(&storage, &selection_ui, &confirm_prompt, name, force);
         }
         Commands::Edit { name } => {
             let selection_ui = CliSelection::new();
-            edit::edit_command(&storage, &selection_ui, name);
+            let editor = Editor;
+            edit::edit_command(&storage, &selection_ui, &editor, name);
         }
         Commands::Export { path } => {
-            export::export_command(&storage, &path);
+            let writer = Writer;
+            export::export_command(&storage, &writer, &path);
         }
         Commands::Import { path } => {
-            import::import_command(&storage, &path);
+            let reader = Reader;
+            import::import_command(&storage, &reader, &path);
         }
         Commands::Restore => {
             let selection_ui = CliSelection::new();

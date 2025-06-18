@@ -2,6 +2,7 @@ use comfy_table::Table;
 
 use crate::models::Snippet;
 
+pub mod cli_confirm;
 pub mod cli_selection;
 pub mod cli_table;
 
@@ -12,4 +13,8 @@ pub trait TableUI {
 pub trait SelectionUI {
     fn with_snippet_list(&self, snippets: Vec<Snippet>) -> Option<Snippet>;
     fn with_backup_list(&self, backups: &[String]) -> Option<usize>;
+}
+
+pub trait ConfirmPrompt {
+    fn confirm(&self, message: &str) -> bool;
 }

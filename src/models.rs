@@ -18,12 +18,12 @@ fn default_now() -> DateTime<Utc> {
     Utc::now()
 }
 
-#[derive(Serialize, Deserialize, Default, Debug)]
+#[derive(Serialize, Deserialize, Default, Debug, Clone)]
 pub struct SnippetStore {
     pub snippets: Vec<Snippet>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct PartialSnippet {
     pub name: String,
     pub description: String,
