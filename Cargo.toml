@@ -2,9 +2,13 @@
 name = "markit"
 version = "0.1.0"
 edition = "2024"
+authors = ["Ryan Palmer <rpalmer9696@gmail.com>"]
 description = "A terminal snippet manager."
 license = "MIT"
-repository = "https://github.com/Nightstack/cli-snippet-manager"
+repository = "https://github.com/Nightstack/markit"
+homepage = "https://github.com/Nightstack/markit"
+categories = ["command-line-utilities"]
+keywords = ["cli", "snippets", "shell"]
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
