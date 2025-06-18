@@ -26,7 +26,7 @@
 cargo install markit
 ```
 
-### 🍺 With Homebrew (once published)
+### 🍺 With Homebrew
 
 ```bash
 brew tap Nightstack/markit
