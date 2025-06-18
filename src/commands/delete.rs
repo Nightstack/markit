@@ -1,17 +1,17 @@
 use dialoguer::Confirm;
 
-use crate::{commands::helper::get_snippet, storage};
+use crate::{commands::helper::get_snippet, storage::Storage};
 
-pub fn delete_command(name: String, force: bool) -> () {
-    let mut store = match storage::get_snippets() {
-        Some(s) => s,
-        None => {
-            println!("📭 No snippets to delete.");
+pub fn delete_command(storage: &dyn Storage, name: String, force: bool) -> () {
+    let mut store = match storage.load() {
+        Ok(s) => s,
+        Err(_) => {
+            println!("📭 No snippets saved yet.");
             return;
         }
     };
 
-    let delete_snippet = match get_snippet(name) {
+    let delete_snippet = match get_snippet(&store, name) {
         Some(s) => s,
         None => {
             return;
@@ -36,8 +36,8 @@ pub fn delete_command(name: String, force: bool) -> () {
 
     store.snippets.retain(|s| s.name != delete_snippet.name);
 
-    if let Err(err) = storage::write_snippets(&store) {
-        eprintln!("⛔ Failed to update snippets file: {}", err);
+    if let Err(err) = storage.save_all(&store) {
+        eprintln!("⛔ Failed to update snippets file: {:?}", err);
     } else {
         println!("🗑️ Snippet '{}' deleted.", delete_snippet.name);
     }

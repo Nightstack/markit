@@ -1,18 +1,13 @@
 use crate::{
-    models::{PartialSnippet, Snippet},
-    storage, ui,
+    models::{PartialSnippet, Snippet, SnippetStore},
+    storage::filter::{self, Filter},
+    ui,
 };
 
-pub fn get_snippet(name: String) -> Option<Snippet> {
-    let store = match storage::get_snippets_by_name(&name) {
-        Some(s) => s,
-        None => {
-            println!("⛔ Snippet '{}' not found.", name);
-            return None;
-        }
-    };
+pub fn get_snippet(store: &SnippetStore, name: String) -> Option<Snippet> {
+    let filtered = filter::apply_filter(&store, Filter::Name(name.clone()));
 
-    return match ui::select_snippet(store.snippets) {
+    return match ui::select_snippet(filtered) {
         Some(s) => Some(s),
         None => {
             println!("⛔ Snippet '{}' not found.", name);

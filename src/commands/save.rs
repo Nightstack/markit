@@ -1,10 +1,10 @@
 use chrono::Utc;
 
-use crate::{models::Snippet, storage};
+use crate::{models::Snippet, storage::Storage};
 use std::io::{self, BufRead, Write};
 
-pub fn save_command(name: String) -> () {
-    if let Some(store) = storage::get_snippets() {
+pub fn save_command(storage: &dyn Storage, name: String) -> () {
+    if let Ok(store) = storage.load() {
         if store
             .snippets
             .iter()
@@ -30,7 +30,10 @@ pub fn save_command(name: String) -> () {
         updated_at: now,
     };
 
-    storage::save_to_file(entry);
+    match storage.save(entry) {
+        Ok(_) => println!("✅ Snippet saved successfully."),
+        Err(e) => eprintln!("⛔ Failed to save snippet: {}", e),
+    }
 }
 
 fn read_description_input() -> String {
