@@ -20,7 +20,7 @@ impl CliSelection {
 impl SelectionUI for CliSelection {
     fn with_snippet_list(&self, snippets: Vec<Snippet>) -> Option<Snippet> {
         if snippets.len() == 1 {
-            return snippets.get(0).cloned();
+            return snippets.first().cloned();
         }
 
         let options: Vec<&str> = snippets.iter().map(|s| s.name.as_str()).collect();

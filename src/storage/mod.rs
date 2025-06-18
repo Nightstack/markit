@@ -1,5 +1,5 @@
-use std::fmt;
 use std::path::PathBuf;
+use std::{fmt, path::Path};
 
 use crate::models::{Snippet, SnippetStore};
 
@@ -38,5 +38,5 @@ pub trait Storage {
     fn save(&self, snippet: Snippet) -> Result<(), StorageError>;
     fn save_all(&self, store: &SnippetStore) -> Result<(), StorageError>;
     fn get_backups(&self) -> Result<Vec<PathBuf>, StorageError>;
-    fn restore_backup(&self, path: &PathBuf) -> Result<(), StorageError>;
+    fn restore_backup(&self, path: &Path) -> Result<(), StorageError>;
 }

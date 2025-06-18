@@ -10,7 +10,7 @@ pub fn delete_command(
     confirm: &dyn ConfirmPrompt,
     name: String,
     force: bool,
-) -> () {
+) {
     let mut store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -63,10 +63,7 @@ mod tests {
     impl Storage for MockStorage {
         fn load(&self) -> Result<SnippetStore, StorageError> {
             if self.should_fail_load {
-                return Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Load failed",
-                )));
+                return Err(StorageError::Io(std::io::Error::other("Load failed")));
             }
 
             Ok(SnippetStore {
@@ -80,10 +77,7 @@ mod tests {
 
         fn save_all(&self, store: &SnippetStore) -> Result<(), StorageError> {
             if self.should_fail_save {
-                return Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Save failed",
-                )));
+                return Err(StorageError::Io(std::io::Error::other("Save failed")));
             }
 
             self.snippets.replace(store.snippets.clone());
@@ -94,7 +88,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }

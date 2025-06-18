@@ -2,7 +2,7 @@ use chrono::Utc;
 
 use crate::{input::SaveInput, models::Snippet, storage::Storage};
 
-pub fn save_command(storage: &dyn Storage, input: &dyn SaveInput, name: String) -> () {
+pub fn save_command(storage: &dyn Storage, input: &dyn SaveInput, name: String) {
     if let Ok(store) = storage.load() {
         if store
             .snippets
@@ -119,10 +119,7 @@ mod tests {
 
         fn save(&self, snippet: Snippet) -> Result<(), StorageError> {
             if self.fail_save {
-                return Err(StorageError::Io(io::Error::new(
-                    io::ErrorKind::Other,
-                    "Save failed",
-                )));
+                return Err(StorageError::Io(io::Error::other("Save failed")));
             }
             self.saved_snippets.borrow_mut().push(snippet);
             Ok(())
@@ -136,7 +133,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _path: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _path: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }

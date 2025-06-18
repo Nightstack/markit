@@ -53,10 +53,7 @@ mod tests {
     impl Storage for MockStorage {
         fn load(&self) -> Result<SnippetStore, StorageError> {
             if self.fail_load {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Load failed",
-                )))
+                Err(StorageError::Io(std::io::Error::other("Load failed")))
             } else {
                 Ok(self.store.borrow().clone())
             }
@@ -70,10 +67,7 @@ mod tests {
             *self.store.borrow_mut() = store.clone();
             *self.save_calls.borrow_mut() += 1;
             if self.fail_save {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Save failed",
-                )))
+                Err(StorageError::Io(std::io::Error::other("Save failed")))
             } else {
                 Ok(())
             }
@@ -83,7 +77,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }
@@ -96,10 +90,7 @@ mod tests {
     impl FileReader for MockFileReader {
         fn read_yaml(&self, _path: &str) -> Result<SnippetStore, StorageError> {
             if self.should_fail {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "mock error",
-                )))
+                Err(StorageError::Io(std::io::Error::other("mock error")))
             } else {
                 Ok(self.store.clone())
             }
