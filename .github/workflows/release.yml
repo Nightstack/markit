@@ -54,7 +54,12 @@ jobs:
           cross build --release --target ${{ matrix.target }}
 
       - name: Build binary (Native)
-        if: matrix.use_cross == false
+        if: matrix.use_cross == false && matrix.name == 'macos'
+        run: |
+          cargo build --release
+
+      - name: Build binary (Native)
+        if: matrix.use_cross == false && matrix.name != 'macos'
         run: |
           cargo build --release --target ${{ matrix.target }}
 
