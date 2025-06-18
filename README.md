@@ -1,4 +1,4 @@
-# markit 🧠✨
+# markit 📠✨
 
 **A blazing-fast CLI to save, search, run, and manage your shell command snippets.**
 
@@ -20,20 +20,35 @@
 
 ## 📦 Installation
 
-### 🦀 With Cargo
+### 🦀 With Cargo (Linux, macOS, Windows)
 
 ```bash
 cargo install markit
 ```
 
-### 🍺 With Homebrew
+### 🍎 macOS (Homebrew)
 
 ```bash
 brew tap Nightstack/markit
 brew install markit
 ```
 
-> _Homebrew formula will be hosted in a separate [tap repo](https://docs.brew.sh/Taps)._
+### 🐧 Linux (prebuilt binary)
+
+```bash
+curl -L https://github.com/Nightstack/markit/releases/latest/download/markit-linux.tar.gz | tar xz
+sudo mv markit /usr/local/bin/
+```
+
+### 🛠️ Windows (prebuilt binary)
+
+1. Download the latest [`markit-windows.zip`](https://github.com/Nightstack/markit/releases/latest)
+2. Extract `markit.exe`
+3. Optionally add to PATH or run from PowerShell / CMD:
+
+```powershell
+.\markit.exe --help
+```
 
 ---
 
