@@ -67,6 +67,16 @@ jobs:
             target/${{ matrix.target }}/release/markit*
             target/${{ matrix.target }}/release/markit.exe
 
+      - name: Upload GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "v${{ github.ref_name }}"
+          files: |
+            target/x86_64-unknown-linux-gnu/release/markit
+            target/x86_64-apple-darwin/release/markit
+            target/x86_64-pc-windows-msvc/release/markit.exe
+
   publish:
     name: Publish Crate
     needs: build
@@ -90,4 +100,4 @@ jobs:
           token: ${{ secrets.HOMEBREW_GITHUB_TOKEN }}
           repository: Nightstack/homebrew-markit
           event-type: bump-homebrew
-          client-payload: '{"tag": "v${{ github.ref_name }}"}'
+          client-payload: '{"tag": "${{ github.ref_name }}"}'
