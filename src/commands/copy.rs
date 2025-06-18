@@ -8,7 +8,7 @@ pub fn copy_command(
     selection_ui: &dyn SelectionUI,
     clipboard: &mut dyn ClipboardProvider,
     name: String,
-) -> () {
+) {
     let store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -46,10 +46,7 @@ mod tests {
     impl Storage for MockStorage {
         fn load(&self) -> Result<SnippetStore, StorageError> {
             if self.should_fail {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Load failed",
-                )))
+                Err(StorageError::Io(std::io::Error::other("Load failed")))
             } else {
                 Ok(SnippetStore {
                     snippets: self.snippets.clone(),
@@ -69,7 +66,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }

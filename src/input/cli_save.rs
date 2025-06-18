@@ -10,8 +10,7 @@ impl SaveInput for CliSaveInput {
 
         let mut description = String::new();
         io::stdin().read_line(&mut description).unwrap();
-        let description = description.trim().to_string();
-        description
+        description.trim().to_string()
     }
 
     fn get_executable(&self) -> bool {

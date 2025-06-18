@@ -7,7 +7,7 @@ use crate::{
     ui::TableUI,
 };
 
-pub fn list_command(storage: &dyn Storage, table_ui: &mut dyn TableUI, tag: Option<String>) -> () {
+pub fn list_command(storage: &dyn Storage, table_ui: &mut dyn TableUI, tag: Option<String>) {
     let store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -66,7 +66,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }

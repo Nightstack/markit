@@ -11,7 +11,7 @@ pub fn edit_command(
     selection_ui: &dyn SelectionUI,
     editor: &dyn EditorLauncher,
     name: String,
-) -> () {
+) {
     let mut store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -94,10 +94,7 @@ mod tests {
 
         fn save_all(&self, store: &SnippetStore) -> Result<(), StorageError> {
             if self.fail_save {
-                return Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "save failed",
-                )));
+                return Err(StorageError::Io(std::io::Error::other("save failed")));
             }
             self.store.replace(store.clone());
             Ok(())
@@ -107,7 +104,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }
@@ -183,7 +180,7 @@ mod tests {
         assert_eq!(updated.name, "test-edited");
         assert_eq!(updated.description, "new desc");
         assert_eq!(updated.content, "echo world");
-        assert_eq!(updated.executable, false);
+        assert!(updated.executable);
         assert_eq!(updated.tags, vec!["tag2"]);
     }
 

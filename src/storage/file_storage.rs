@@ -1,7 +1,7 @@
 use std::{
     fs::{self, File},
     io::Write,
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use chrono::Utc;
@@ -112,7 +112,7 @@ impl Storage for FileStorage {
         Ok(backups)
     }
 
-    fn restore_backup(&self, path: &PathBuf) -> Result<(), StorageError> {
+    fn restore_backup(&self, path: &Path) -> Result<(), StorageError> {
         fs::copy(path, self.storage_path())
             .map_err(StorageError::Io)
             .map(|_| {

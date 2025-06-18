@@ -41,7 +41,10 @@ mod tests {
         storage::{Storage, StorageError},
         ui::SelectionUI,
     };
-    use std::{cell::RefCell, path::PathBuf};
+    use std::{
+        cell::RefCell,
+        path::{Path, PathBuf},
+    };
 
     struct MockStorage {
         backups: Vec<PathBuf>,
@@ -65,8 +68,7 @@ mod tests {
 
         fn get_backups(&self) -> Result<Vec<PathBuf>, StorageError> {
             if self.fail_get {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
+                Err(StorageError::Io(std::io::Error::other(
                     "Failed to get backups",
                 )))
             } else {
@@ -74,13 +76,10 @@ mod tests {
             }
         }
 
-        fn restore_backup(&self, path: &PathBuf) -> Result<(), StorageError> {
-            self.restore_called_with.replace(Some(path.clone()));
+        fn restore_backup(&self, path: &Path) -> Result<(), StorageError> {
+            self.restore_called_with.replace(Some(path.to_path_buf()));
             if self.fail_restore {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Failed to restore",
-                )))
+                Err(StorageError::Io(std::io::Error::other("Failed to restore")))
             } else {
                 Ok(())
             }

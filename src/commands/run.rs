@@ -7,7 +7,7 @@ pub fn run_command(
     selection_ui: &dyn SelectionUI,
     runner: &dyn CommandRunner,
     name: String,
-) -> () {
+) {
     let store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -55,10 +55,7 @@ mod tests {
     impl Storage for MockStorage {
         fn load(&self) -> Result<crate::models::SnippetStore, StorageError> {
             if self.fail_load {
-                Err(StorageError::Io(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Failed to load",
-                )))
+                Err(StorageError::Io(std::io::Error::other("Failed to load")))
             } else {
                 Ok(crate::models::SnippetStore {
                     snippets: self.snippet.clone().into_iter().collect(),
@@ -78,7 +75,7 @@ mod tests {
             Ok(vec![])
         }
 
-        fn restore_backup(&self, _: &std::path::PathBuf) -> Result<(), StorageError> {
+        fn restore_backup(&self, _: &std::path::Path) -> Result<(), StorageError> {
             Ok(())
         }
     }
@@ -104,7 +101,7 @@ mod tests {
     impl CommandRunner for MockCommandRunner {
         fn run(&self, _command: &str) -> Result<ExitStatus, std::io::Error> {
             match &self.result {
-                Ok(status) => Ok(status.clone()),
+                Ok(status) => Ok(*status),
                 Err(e) => Err(std::io::Error::new(e.kind(), e.to_string())),
             }
         }
@@ -184,7 +181,7 @@ mod tests {
         };
 
         let runner = MockCommandRunner {
-            result: Err(std::io::Error::new(std::io::ErrorKind::Other, "Mock error")),
+            result: Err(std::io::Error::other("Mock error")),
         };
 
         run_command(&storage, &ui, &runner, "test".to_string());

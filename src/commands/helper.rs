@@ -9,15 +9,15 @@ pub fn get_snippet(
     selection_ui: &dyn SelectionUI,
     name: String,
 ) -> Option<Snippet> {
-    let filtered = filter::apply_filter(&store, Filter::Name(name.clone()));
+    let filtered = filter::apply_filter(store, Filter::Name(name.clone()));
 
-    return match selection_ui.with_snippet_list(filtered) {
+    match selection_ui.with_snippet_list(filtered) {
         Some(s) => Some(s),
         None => {
             println!("⛔ Snippet '{}' not found.", name);
-            return None;
+            None
         }
-    };
+    }
 }
 
 pub fn redact_snippet(snippet: &Snippet) -> PartialSnippet {
