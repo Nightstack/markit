@@ -4,10 +4,11 @@ use crate::{
     commands::helper::{get_snippet, redact_snippet},
     models::{PartialSnippet, Snippet},
     storage::Storage,
+    ui::SelectionUI,
 };
 use tempfile::NamedTempFile;
 
-pub fn edit_command(storage: &dyn Storage, name: String) -> () {
+pub fn edit_command(storage: &dyn Storage, selection_ui: &dyn SelectionUI, name: String) -> () {
     let mut store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -16,7 +17,7 @@ pub fn edit_command(storage: &dyn Storage, name: String) -> () {
         }
     };
 
-    let mut original = match get_snippet(&store, name) {
+    let mut original = match get_snippet(&store, selection_ui, name) {
         Some(s) => s,
         None => {
             return;

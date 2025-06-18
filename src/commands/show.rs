@@ -1,6 +1,6 @@
-use crate::{commands::helper::get_snippet, storage::Storage};
+use crate::{commands::helper::get_snippet, storage::Storage, ui::SelectionUI};
 
-pub fn show_command(storage: &dyn Storage, name: String) {
+pub fn show_command(storage: &dyn Storage, selection_ui: &dyn SelectionUI, name: String) {
     let store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -9,7 +9,7 @@ pub fn show_command(storage: &dyn Storage, name: String) {
         }
     };
 
-    let snippet = get_snippet(&store, name).unwrap();
+    let snippet = get_snippet(&store, selection_ui, name).unwrap();
 
     println!("🔎 Snippet: {}", snippet.name);
     println!("📄 Description: {}", snippet.description);

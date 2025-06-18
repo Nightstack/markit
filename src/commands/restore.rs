@@ -1,7 +1,7 @@
 use crate::storage::Storage;
-use crate::ui::select_backup;
+use crate::ui::SelectionUI;
 
-pub fn restore_command(storage: &dyn Storage) {
+pub fn restore_command(storage: &dyn Storage, selection_ui: &dyn SelectionUI) {
     let backups = match storage.get_backups() {
         Ok(s) => s,
         Err(_) => {
@@ -20,7 +20,7 @@ pub fn restore_command(storage: &dyn Storage) {
         .map(|p| p.file_name().unwrap().to_string_lossy().to_string())
         .collect();
 
-    let selected_index = match select_backup(&display_names) {
+    let selected_index = match selection_ui.with_backup_list(&display_names) {
         Some(i) => i,
         None => return,
     };

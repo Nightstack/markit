@@ -10,6 +10,7 @@ use cli::{Cli, Commands};
 use crate::{
     commands::{copy, delete, edit, export, import, list, restore, run, save, show},
     storage::file_storage::FileStorage,
+    ui::{cli_selection::CliSelection, cli_table::CliTable},
 };
 
 fn main() {
@@ -21,22 +22,28 @@ fn main() {
             save::save_command(&storage, name);
         }
         Commands::Run { name } => {
-            run::run_command(&storage, name);
+            let selection_ui = CliSelection::new();
+            run::run_command(&storage, &selection_ui, name);
         }
         Commands::List { tag } => {
-            list::list_command(&storage, tag);
+            let mut cli_table = CliTable::new();
+            list::list_command(&storage, &mut cli_table, tag);
         }
         Commands::Show { name } => {
-            show::show_command(&storage, name);
+            let selection_ui = CliSelection::new();
+            show::show_command(&storage, &selection_ui, name);
         }
         Commands::Copy { name } => {
-            copy::copy_command(&storage, name);
+            let selection_ui = CliSelection::new();
+            copy::copy_command(&storage, &selection_ui, name);
         }
         Commands::Delete { name, force } => {
-            delete::delete_command(&storage, name, force);
+            let selection_ui = CliSelection::new();
+            delete::delete_command(&storage, &selection_ui, name, force);
         }
         Commands::Edit { name } => {
-            edit::edit_command(&storage, name);
+            let selection_ui = CliSelection::new();
+            edit::edit_command(&storage, &selection_ui, name);
         }
         Commands::Export { path } => {
             export::export_command(&storage, &path);
@@ -45,7 +52,8 @@ fn main() {
             import::import_command(&storage, &path);
         }
         Commands::Restore => {
-            restore::restore_command(&storage);
+            let selection_ui = CliSelection::new();
+            restore::restore_command(&storage, &selection_ui);
         }
     }
 }

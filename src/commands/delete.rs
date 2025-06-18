@@ -1,8 +1,13 @@
 use dialoguer::Confirm;
 
-use crate::{commands::helper::get_snippet, storage::Storage};
+use crate::{commands::helper::get_snippet, storage::Storage, ui::SelectionUI};
 
-pub fn delete_command(storage: &dyn Storage, name: String, force: bool) -> () {
+pub fn delete_command(
+    storage: &dyn Storage,
+    selection_ui: &dyn SelectionUI,
+    name: String,
+    force: bool,
+) -> () {
     let mut store = match storage.load() {
         Ok(s) => s,
         Err(_) => {
@@ -11,7 +16,7 @@ pub fn delete_command(storage: &dyn Storage, name: String, force: bool) -> () {
         }
     };
 
-    let delete_snippet = match get_snippet(&store, name) {
+    let delete_snippet = match get_snippet(&store, selection_ui, name) {
         Some(s) => s,
         None => {
             return;
