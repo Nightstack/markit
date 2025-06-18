@@ -29,7 +29,7 @@ cargo install markit
 ### 🍺 With Homebrew (once published)
 
 ```bash
-brew tap yourname/markit
+brew tap Nightstack/markit
 brew install markit
 ```
 
@@ -133,7 +133,7 @@ Automatic backups are saved in:
 ### Clone
 
 ```bash
-git clone https://github.com/yourname/markit
+git clone https://github.com/Nightstack/markit
 cd markit
 cargo run -- <command>
 ```
@@ -143,17 +143,6 @@ cargo run -- <command>
 ```bash
 cargo build --release
 ```
-
----
-
-## ✅ TODO
-
-- [ ] Publish to crates.io
-- [ ] Publish to Homebrew
-- [ ] Add JSON import/export support
-- [ ] Add tag suggestions
-- [ ] Better error recovery on malformed YAML
-- [ ] Integration tests
 
 ---
 
