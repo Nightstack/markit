@@ -1,6 +1,6 @@
 [package]
 name = "markit"
-version = "1.2.0"
+version = "1.2.1"
 edition = "2024"
 authors = ["Ryan Palmer <rpalmer9696@gmail.com>"]
 description = "A terminal snippet manager."
