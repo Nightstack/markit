@@ -33,11 +33,25 @@ brew tap Nightstack/markit
 brew install markit
 ```
 
+### 🐧 Linux (DEB package)
+
+```bash
+curl -LO https://github.com/Nightstack/markit/releases/latest/download/markit-x86_64-unknown-linux-gnu.deb
+sudo dpkg -i markit-x86_64-unknown-linux-gnu.deb
+```
+
 ### 🐧 Linux (prebuilt binary)
 
 ```bash
 curl -L https://github.com/Nightstack/markit/releases/latest/download/markit-linux.tar.gz | tar xz
 sudo mv markit /usr/local/bin/
+```
+
+### 🏑 Windows (Scoop)
+
+```powershell
+scoop bucket add Nightstack https://github.com/Nightstack/scoop-markit
+scoop install markit
 ```
 
 ### 🛠️ Windows (prebuilt binary)
