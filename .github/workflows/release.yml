@@ -49,6 +49,10 @@ jobs:
         if: matrix.use_cross == true
         run: cargo install cross --git https://github.com/cross-rs/cross
 
+      - name: Install cargo-deb (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: cargo install cargo-deb
+
       - name: Build (Cross for Linux)
         if: matrix.use_cross == true
         run: |
@@ -59,6 +63,11 @@ jobs:
         run: |
           cargo build --release --target ${{ matrix.target }}
 
+      - name: Package .deb (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cargo deb --no-build --target ${{ matrix.target }}
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -66,6 +75,7 @@ jobs:
           path: |
             target/${{ matrix.target }}/release/markit*
             target/${{ matrix.target }}/release/markit.exe
+            target/${{ matrix.target }}/debian/*.deb
 
       - name: Upload GitHub Release
         uses: softprops/action-gh-release@v2
@@ -74,6 +84,7 @@ jobs:
           name: "${{ github.ref_name }}"
           files: |
             target/x86_64-unknown-linux-gnu/release/markit
+            target/x86_64-unknown-linux-gnu/debian/*.deb
             target/x86_64-apple-darwin/release/markit
             target/x86_64-pc-windows-msvc/release/markit.exe
         env:
