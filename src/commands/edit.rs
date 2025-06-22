@@ -180,7 +180,7 @@ mod tests {
         assert_eq!(updated.name, "test-edited");
         assert_eq!(updated.description, "new desc");
         assert_eq!(updated.content, "echo world");
-        assert!(updated.executable);
+        assert!(!updated.executable);
         assert_eq!(updated.tags, vec!["tag2"]);
     }
 

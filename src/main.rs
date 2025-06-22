@@ -8,11 +8,11 @@ mod models;
 mod storage;
 mod ui;
 
-use arboard::Clipboard;
 use clap::Parser;
 use cli::{Cli, Commands};
 
 use crate::{
+    clipboard_provider::SmartClipboard,
     command_runner::ShellCommandRunner,
     commands::{copy, delete, edit, export, import, list, restore, run, save, show},
     file::{editor::Editor, reader::Reader, writer::Writer},
@@ -45,7 +45,7 @@ fn main() {
         }
         Commands::Copy { name } => {
             let selection_ui = CliSelection::new();
-            let mut clipboard = Clipboard::new().expect("Failed to access clipboard");
+            let mut clipboard = SmartClipboard::new();
             copy::copy_command(&storage, &selection_ui, &mut clipboard, name);
         }
         Commands::Delete { name, force } => {

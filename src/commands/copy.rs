@@ -21,7 +21,7 @@ pub fn copy_command(
         return;
     };
 
-    if let Err(e) = clipboard.set_text(snippet.content.clone()) {
+    if let Err(e) = clipboard.set_text(snippet.content.as_str()) {
         eprintln!("⛔ Failed to copy to clipboard: {}", e);
         return;
     }
@@ -91,11 +91,11 @@ mod tests {
     }
 
     impl ClipboardProvider for MockClipboard {
-        fn set_text(&mut self, text: String) -> Result<(), String> {
+        fn set_text(&mut self, text: &str) -> Result<(), String> {
             if self.fail {
                 Err("Clipboard failed".to_string())
             } else {
-                self.last_text.replace(Some(text));
+                self.last_text.replace(Some(text.to_string()));
                 Ok(())
             }
         }
